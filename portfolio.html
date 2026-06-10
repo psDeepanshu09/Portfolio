@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy:     #050A18;
+    --mid:      #0D1B3E;
+    --blue:     #1E5EFF;
+    --soft:     #7B9CFF;
+    --petal:    #B8C6FF;
+    --light:    #E8EEFF;
+    --rose-dk:  #3A1A4A;
+  }
+
+  html { 
+    scroll-snap-type: y mandatory; 
+    scroll-behavior: smooth; 
+  }
+
+  body {
+    background: var(--navy);
+    color: var(--light);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  section {
+    height: 100vh; /* FORCED HEIGHT TO PERFECTLY MATCH THE VIEWPORT */
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    background: linear-gradient(to bottom, rgba(5,10,24,0.95), transparent);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garant', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--petal);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--soft);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--petal); }
+
+  /* HERO */
+  #hero { background: var(--navy); }
+
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    max-width: 1100px;
+    width: 100%;
+    align-items: center;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--soft);
+    margin-bottom: 1.4rem;
+  }
+  .hero-name {
+    font-family: 'Cormorant Garant', serif;
+    font-size: clamp(3.2rem, 6vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--light);
+    margin-bottom: 0.4rem;
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--petal);
+  }
+  .hero-role {
+    font-family: 'Cormorant Garant', serif;
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-style: italic;
+    color: var(--soft);
+    margin-bottom: 2rem;
+  }
+  .hero-desc {
+    font-size: 0.92rem;
+    line-height: 1.8;
+    color: rgba(232,238,255,0.6);
+    max-width: 380px;
+    margin-bottom: 2.8rem;
+  }
+  .hero-cta {
+    display: inline-block;
+    padding: 0.85rem 2.2rem;
+    border: 1px solid var(--soft);
+    color: var(--soft);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.35s;
+  }
+  .hero-cta:hover {
+    background: var(--soft);
+    color: var(--navy);
+  }
+
+  /* SVG ROSE */
+  .hero-rose {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .rose-svg {
+    width: min(420px, 45vw);
+    opacity: 0;
+    animation: roseBloom 2s ease forwards 0.4s;
+    filter: drop-shadow(0 0 18px rgba(100,160,255,0.55)) drop-shadow(0 0 40px rgba(60,100,220,0.3));
+  }
+  @keyframes roseBloom {
+    from { opacity: 0; transform: scale(0.88) rotate(-4deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+  .rose-pulse {
+    animation: rosePulse 3.5s ease-in-out infinite;
+    transform-origin: 200px 215px;
+  }
+  .rose-pulse2 {
+    animation: rosePulse 3.5s ease-in-out infinite 0.8s;
+    transform-origin: 200px 210px;
+  }
+  @keyframes rosePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.65; transform: scale(0.94); }
+  }
+  .sparkle1 { animation: sparkle 2.8s ease-in-out infinite; }
+  .sparkle2 { animation: sparkle 2.8s ease-in-out infinite 1.4s; }
+  @keyframes sparkle {
+    0%, 100% { opacity: 0.8; }
+    50%       { opacity: 0.15; }
+  }
+
+  /* ABOUT */
+  #about { background: var(--mid); }
+  .about-inner {
+    max-width: 900px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .about-label {
+    font-family: 'Cormorant Garant', serif;
+    font-size: clamp(2.5rem, 4vw, 3.8rem);
+    font-style: italic;
+    color: var(--petal);
+    line-height: 1;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    align-self: center;
+  }
+  .about-tagline {
+    font-family: 'Cormorant Garant', serif;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    color: var(--light);
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+  }
+  .about-text {
+    font-size: 0.92rem;
+    line-height: 1.9;
+    color: rgba(232,238,255,0.6);
+    margin-bottom: 2.5rem;
+  }
+  .skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .skill-tag {
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(123,156,255,0.3);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--soft);
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .skill-tag:hover { border-color: var(--petal); color: var(--petal); }
+
+  /* PROJECTS */
+  #projects { 
+    background: var(--navy); 
+    align-items: center; 
+  }
+  .projects-inner { 
+    max-width: 920px; 
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .section-heading {
+    font-family: 'Cormorant Garant', serif;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    color: var(--petal);
+    font-weight: 300;
+    margin-bottom: 0.2rem;
+  }
+  .section-sub {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--soft);
+    margin-bottom: 2rem;
+  }
+
+  .projects-grid--single {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+  .project-card {
+    background: var(--mid);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.35s;
+    border: 1px solid rgba(123,156,255,0.08);
+  }
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+  .project-card:hover { background: rgba(13,27,62,0.9); }
+  .project-card:hover::before { transform: scaleX(1); }
+
+  .project-num {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: rgba(123,156,255,0.4);
+    margin-bottom: 0.8rem;
+  }
+  .project-title {
+    font-family: 'Cormorant Garant', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--light);
+    margin-bottom: 0.6rem;
+    line-height: 1.2;
+    text-decoration: underline;
+    text-decoration-color: var(--soft);
+    text-underline-offset: 5px;
+    text-decoration-thickness: 1px;
+  }
+  .project-desc {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: rgba(232,238,255,0.5);
+    margin-bottom: 1.2rem;
+  }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .project-tag {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    border: 1px solid rgba(30,94,255,0.3);
+    padding: 0.25rem 0.65rem;
+  }
+  .project-arrow {
+    position: absolute;
+    bottom: 1.5rem; right: 1.5rem;
+    font-size: 1.2rem;
+    color: rgba(123,156,255,0.2);
+    transition: color 0.3s, transform 0.3s;
+  }
+  .project-card:hover .project-arrow { color: var(--soft); transform: translate(4px, -4px); }
+  
+  .project-card--featured {
+    padding: 2.2rem 2.5rem;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    border: 1px solid rgba(123,156,255,0.18);
+  }
+  .project-card--featured:hover {
+    border-color: rgba(123,156,255,0.45);
+    box-shadow: 0 0 30px rgba(30,94,255,0.12);
+  }
+  .project-card--featured, .project-card--featured * {
+    text-decoration: none;
+  }
+  .project-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.3rem;
+  }
+  .project-live-badge {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.7rem;
+    border: 1px solid rgba(100,200,120,0.5);
+    color: #80E8A0;
+    border-radius: 2px;
+    animation: badgePulse 2.5s ease-in-out infinite;
+  }
+  @keyframes badgePulse {
+    0%,100% { border-color: rgba(100,200,120,0.5); color: #80E8A0; }
+    50%      { border-color: rgba(100,200,120,0.9); color: #A8F0BC; }
+  }
+  .project-tagline {
+    font-family: 'Cormorant Garant', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--soft);
+    margin-bottom: 1rem;
+  }
+  
+  .project-feature-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem 3rem;
+    margin: 1.5rem 0;
+    border-top: 1px solid rgba(123, 156, 255, 0.1);
+    border-bottom: 1px solid rgba(123, 156, 255, 0.1);
+    padding: 1.2rem 0;
+  }
+  .feature-item {
+    font-size: 0.85rem;
+    color: rgba(232, 238, 255, 0.75);
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* CONTACT */
+  #contact { background: var(--mid); }
+  .contact-inner {
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+  }
+  .contact-pre {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--soft);
+    margin-bottom: 1.5rem;
+  }
+  .contact-heading {
+    font-family: 'Cormorant Garant', serif;
+    font-size: clamp(2.8rem, 5vw, 5rem);
+    font-weight: 300;
+    color: var(--light);
+    line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  .contact-heading em { font-style: italic; color: var(--petal); }
+  .contact-sub {
+    font-size: 0.9rem;
+    color: rgba(232,238,255,0.5);
+    margin-bottom: 3rem;
+    line-height: 1.7;
+  }
+  .contact-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 2rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .contact-link.primary {
+    background: var(--blue);
+    color: #fff;
+  }
+  .contact-link.primary:hover { background: var(--soft); }
+  .contact-link.ghost {
+    border: 1px solid rgba(123,156,255,0.4);
+    color: var(--soft);
+  }
+  .contact-link.ghost:hover { border-color: var(--petal); color: var(--petal); }
+
+  .petal {
+    position: absolute;
+    border-radius: 50% 0 50% 0;
+    opacity: 0.04;
+    pointer-events: none;
+  }
+
+  /* FOOTER INTERACTION ACCORDING TO VIEWPORT */
+  footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: rgba(123,156,255,0.3);
+    background: transparent;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+    .hero-content { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-rose { order: -1; }
+    .rose-svg { width: 220px; }
+    .about-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .about-label { writing-mode: horizontal-tb; transform: none; }
+    .project-feature-list {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .project-card--featured {
+      padding: 1.5rem;
+    }
+    section { height: auto; min-height: 100vh; padding: 6rem 1.5rem 3rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#hero">D.C.</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="petal" style="width:300px;height:300px;background:var(--blue);top:-80px;right:-80px;"></div>
+  <div class="petal" style="width:200px;height:200px;background:var(--soft);bottom:10%;left:5%;"></div>
+
+  <div class="hero-content">
+    <div class="hero-text">
+      <p class="hero-eyebrow">Software Developer</p>
+      <h1 class="hero-name">Deepanshu<br><em>Chouhan</em></h1>
+      <p class="hero-role">Building things that matter</p>
+      <p class="hero-desc">Chasing the art of full-stack development. Focused on deep system design, clean execution, and building digital tools that make an impact.</p>
+      <a class="hero-cta" href="#projects">View my work</a>
+    </div>
+
+    <div class="hero-rose">
+      <svg class="rose-svg" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="halo1" cx="50%" cy="44%" r="52%">
+            <stop offset="0%" stop-color="#7BAEFF" stop-opacity="0.45"/>
+            <stop offset="55%" stop-color="#3060CC" stop-opacity="0.12"/>
+            <stop offset="100%" stop-color="#050A18" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="halo2" cx="50%" cy="44%" r="30%">
+            <stop offset="0%" stop-color="#B8D4FF" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#3060CC" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="pg_outer" x1="0%" y1="0%" x2="60%" y2="100%">
+            <stop offset="0%" stop-color="#8AAEE0"/>
+            <stop offset="100%" stop-color="#1A2870"/>
+          </linearGradient>
+          <linearGradient id="pg_mid" x1="20%" y1="0%" x2="80%" y2="100%">
+            <stop offset="0%" stop-color="#9BBCEE"/>
+            <stop offset="100%" stop-color="#1E307A"/>
+          </linearGradient>
+          <linearGradient id="pg_inner" x1="30%" y1="0%" x2="70%" y2="100%">
+            <stop offset="0%" stop-color="#B0CCFF"/>
+            <stop offset="100%" stop-color="#2840A0"/>
+          </linearGradient>
+          <linearGradient id="pg_core" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#C8DCFF"/>
+            <stop offset="100%" stop-color="#5078D0"/>
+          </linearGradient>
+          <linearGradient id="stem_g" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#1A3A50"/>
+            <stop offset="50%" stop-color="#2B5C6E"/>
+            <stop offset="100%" stop-color="#1A3A50"/>
+          </linearGradient>
+          <linearGradient id="leaf_g1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#2A5040"/>
+            <stop offset="100%" stop-color="#1A3028"/>
+          </linearGradient>
+          <linearGradient id="leaf_g2" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#2E5845"/>
+            <stop offset="100%" stop-color="#1C3430"/>
+          </linearGradient>
+          <filter id="glow_sm" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glow_lg" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="10" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glow_edge" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <ellipse cx="200" cy="215" rx="170" ry="160" fill="url(#halo1)" class="rose-pulse"/>
+        <ellipse cx="200" cy="210" rx="100" ry="95"  fill="url(#halo2)" class="rose-pulse2"/>
+
+        <path d="M200 420 C199 400 197 380 198 360 C199 345 200 335 200 325" stroke="url(#stem_g)" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <path d="M200 420 C200 400 199 380 199.5 360 C200 345 200.5 335 200.5 325" stroke="#3E7A8A" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+
+        <path d="M199 375 C185 368 168 358 158 342 C155 335 157 328 162 326 C175 330 188 345 199 362 Z" fill="url(#leaf_g1)"/>
+        <path d="M199 375 C190 365 175 350 162 326 C170 326 181 335 192 350 L199 362 Z" fill="#3A6858" opacity="0.4"/>
+        <path d="M199 374 C185 363 168 348 162 327" stroke="#4A8060" stroke-width="0.8" fill="none" opacity="0.6"/>
+        <path d="M200 355 C214 347 232 336 241 320 C244 312 242 305 237 303 C224 307 211 322 200 340 Z" fill="url(#leaf_g2)"/>
+        <path d="M200 355 C209 345 225 330 237 303 C229 305 218 317 208 332 L200 340 Z" fill="#3E6C5A" opacity="0.4"/>
+        <path d="M200 354 C214 343 231 328 237 304" stroke="#4A8060" stroke-width="0.8" fill="none" opacity="0.6"/>
+
+        <path d="M200 310 C175 305 148 298 128 278 C115 262 118 242 130 235 C145 240 162 258 178 280 C188 290 195 302 200 312 Z" fill="url(#pg_outer)" opacity="0.72"/>
+        <path d="M200 310 C182 305 158 295 138 275 C130 264 130 250 135 243" fill="none" stroke="#C0D4FF" stroke-width="0.8" opacity="0.35"/>
+        <path d="M200 310 C225 305 252 298 272 278 C285 262 282 242 270 235 C255 240 238 258 222 280 C212 290 205 302 200 312 Z" fill="url(#pg_outer)" opacity="0.72"/>
+        <path d="M200 310 C218 305 242 295 262 275 C270 264 270 250 265 243" fill="none" stroke="#C0D4FF" stroke-width="0.8" opacity="0.35"/>
+        <path d="M200 308 C185 290 170 268 165 242 C163 226 168 210 178 206 C190 210 198 230 200 255 C200 275 200 295 200 308 Z" fill="url(#pg_outer)" opacity="0.65"/>
+        <path d="M200 308 C215 290 230 268 235 242 C237 226 232 210 222 206 C210 210 202 230 200 255 C200 275 200 295 200 308 Z" fill="url(#pg_outer)" opacity="0.65"/>
+        <path d="M200 300 C192 280 186 256 186 232 C186 215 192 200 200 196 C208 200 214 215 214 232 C214 256 208 280 200 300 Z" fill="url(#pg_outer)" opacity="0.55"/>
+
+        <path d="M200 288 C178 280 158 266 148 245 C142 230 146 215 156 210 C168 214 180 230 190 250 C195 262 198 277 200 290 Z" fill="url(#pg_mid)" opacity="0.85"/>
+        <path d="M200 288 C183 278 163 263 154 244 C148 233 150 220 157 213" fill="none" stroke="#D0E2FF" stroke-width="1" opacity="0.4"/>
+        <path d="M200 288 C222 280 242 266 252 245 C258 230 254 215 244 210 C232 214 220 230 210 250 C205 262 202 277 200 290 Z" fill="url(#pg_mid)" opacity="0.85"/>
+        <path d="M200 288 C217 278 237 263 246 244 C252 233 250 220 243 213" fill="none" stroke="#D0E2FF" stroke-width="1" opacity="0.4"/>
+        <path d="M200 282 C186 264 176 242 175 220 C174 204 180 192 190 190 C199 192 202 210 202 232 C202 252 201 270 200 284 Z" fill="url(#pg_mid)" opacity="0.78"/>
+        <path d="M200 282 C214 264 224 242 225 220 C226 204 220 192 210 190 C201 192 198 210 198 232 C198 252 199 270 200 284 Z" fill="url(#pg_mid)" opacity="0.78"/>
+
+        <path d="M200 268 C184 258 170 242 166 224 C163 210 168 198 178 196 C188 198 196 212 199 230 C200 246 200 260 200 270 Z" fill="url(#pg_inner)" filter="url(#glow_edge)" opacity="0.9"/>
+        <path d="M200 268 C186 256 173 240 169 224 C166 213 169 202 177 198" fill="none" stroke="#D8ECFF" stroke-width="1.2" opacity="0.5"/>
+        <path d="M200 268 C216 258 230 242 234 224 C237 210 232 198 222 196 C212 198 204 212 201 230 C200 246 200 260 200 270 Z" fill="url(#pg_inner)" filter="url(#glow_edge)" opacity="0.9"/>
+        <path d="M200 268 C214 256 227 240 231 224 C234 213 231 202 223 198" fill="none" stroke="#D8ECFF" stroke-width="1.2" opacity="0.5"/>
+        <path d="M200 260 C188 246 180 228 180 212 C180 200 186 192 194 192 C200 194 202 208 202 224 C202 240 201 254 200 262 Z" fill="url(#pg_inner)" opacity="0.88"/>
+        <path d="M200 260 C212 246 220 228 220 212 C220 200 214 192 206 192 C200 194 198 208 198 224 C198 240 199 254 200 262 Z" fill="url(#pg_inner)" opacity="0.88"/>
+
+        <path d="M200 248 C190 238 184 224 185 212 C186 204 191 198 198 198 C202 200 204 210 204 222 C204 234 202 244 200 250 Z" fill="url(#pg_core)" filter="url(#glow_sm)" opacity="0.95"/>
+        <path d="M200 248 C210 238 216 224 215 212 C214 204 209 198 202 198 C198 200 196 210 196 222 C196 234 198 244 200 250 Z" fill="url(#pg_core)" filter="url(#glow_sm)" opacity="0.95"/>
+        <path d="M200 240 C194 232 191 222 193 214 C195 208 198 204 200 204 C202 204 205 208 207 214 C209 222 206 232 200 240 Z" fill="#C8DCFF" filter="url(#glow_sm)"/>
+
+        <path d="M178 270 C176 260 174 248 175 235" stroke="#0F1E60" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+        <path d="M222 270 C224 260 226 248 225 235" stroke="#0F1E60" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+        <path d="M162 258 C160 248 161 236 165 226" stroke="#0F1E60" stroke-width="1" fill="none" opacity="0.4" stroke-linecap="round"/>
+        <path d="M238 258 C240 248 239 236 235 226" stroke="#0F1E60" stroke-width="1" fill="none" opacity="0.4" stroke-linecap="round"/>
+
+        <ellipse cx="200" cy="208" rx="11" ry="12" fill="#A0C0F0" filter="url(#glow_sm)"/>
+        <ellipse cx="200" cy="207" rx="7"  ry="7.5" fill="#C0D8FF" filter="url(#glow_sm)"/>
+        <ellipse cx="200" cy="206" rx="3.5" ry="4" fill="#E0ECFF"/>
+        <circle  cx="200" cy="205" r="1.5" fill="#FFFFFF" opacity="0.9"/>
+
+        <ellipse cx="200" cy="208" rx="22" ry="22" fill="#8ABBFF" opacity="0.18" filter="url(#glow_lg)" class="rose-pulse2"/>
+
+        <path d="M130 236 C145 242 162 260 178 280 C188 292 196 305 200 313" stroke="#C8DCFF" stroke-width="1.2" fill="none" opacity="0.3" stroke-linecap="round"/>
+        <path d="M270 236 C255 242 238 260 222 280 C212 292 204 305 200 313" stroke="#C8DCFF" stroke-width="1.2" fill="none" opacity="0.3" stroke-linecap="round"/>
+
+        <circle cx="158" cy="244" r="2" fill="#D0E8FF" opacity="0.85" class="sparkle1"/>
+        <circle cx="242" cy="244" r="2" fill="#D0E8FF" opacity="0.85" class="sparkle2"/>
+        <circle cx="183" cy="196" r="1.5" fill="#E8F4FF" opacity="0.7" class="sparkle1"/>
+        <circle cx="217" cy="196" r="1.5" fill="#E8F4FF" opacity="0.7" class="sparkle2"/>
+        <circle cx="200" cy="186" r="2.5" fill="#FFFFFF" opacity="0.6" filter="url(#glow_sm)" class="sparkle1"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="petal" style="width:400px;height:400px;background:var(--blue);bottom:-100px;right:-100px;"></div>
+  <div class="about-inner">
+    <div class="about-label">About</div>
+    <div class="about-body">
+      <p class="about-tagline">Engineering smooth backend engines with frontends that look and feel alive.</p>
+      <p class="about-text">
+        With a background covering full-stack development and system logic, I mix technical precision with clean design. I don’t just write code to make things work; I build software that is expressive, easy to maintain, and genuinely satisfying to use. For me, a great application is a balance of smart architecture and a flawless experience on the screen
+      </p>
+      <p class="about-text" style="margin-top: -1rem;">
+        When I'm not building, you'll find me exploring the intersection of design and code, contributing to open source, or chasing the perfect cup of coffee.
+      </p>
+      <div class="skills-grid">
+        <span class="skill-tag">TypeScript</span>
+        <span class="skill-tag">React</span>
+        <span class="skill-tag">Node.js</span>
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">PostgreSQL</span>
+        <span class="skill-tag">Docker</span>
+        <span class="skill-tag">AWS</span>
+        <span class="skill-tag">REST / GraphQL</span>
+        <span class="skill-tag">System Design</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="projects-inner">
+    <h2 class="section-heading">Selected work</h2>
+    <p class="section-sub">Projects &amp; case studies</p>
+
+    <div class="projects-grid projects-grid--single">
+      <a class="project-card project-card--featured" href="https://yoruturf.onrender.com/" target="_blank" rel="noopener">
+        <p class="project-num">01</p>
+        <div class="project-header">
+          <h3 class="project-title">Yoru Turf</h3>
+          <span class="project-live-badge">Live ↗</span>
+        </div>
+        <p class="project-tagline">Premium Cricket Arena — Booking Platform</p>
+        <p class="project-desc">A full-stack cricket slot booking platform built mobile-first and deployed on Render. Features a complete booking flow with real-time slot availability (auto-refreshing every 30s), overlap detection, persistent storage, and a password-protected admin dashboard for managing bookings and cancellations.</p>
+        
+        <div class="project-feature-list">
+          <div class="feature-item">🔹 Responsive, mobile-first multi-page architecture</div>
+          <div class="feature-item">🔹 Dynamic live slots updating via 30s auto-refresh</div>
+          <div class="feature-item">🔹 Comprehensive data validation with error handling</div>
+          <div class="feature-item">🔹 Secure, password-protected administrator panel</div>
+          <div class="feature-item">🔹 Lightweight JSON file-system data persistence</div>
+          <div class="feature-item">🔹 Production-ready cloud deployment via Render</div>
+        </div>
+        
+        <div class="project-tags">
+          <span class="project-tag">Node.js</span>
+          <span class="project-tag">Express</span>
+          <span class="project-tag">Vanilla JS</span>
+          <span class="project-tag">HTML/CSS</span>
+          <span class="project-tag">Render</span>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="petal" style="width:500px;height:500px;background:var(--blue);top:-150px;left:-150px;"></div>
+  <div class="contact-inner">
+    <p class="contact-pre">Let's connect</p>
+    <h2 class="contact-heading">Got a project<br>in <em>mind?</em></h2>
+    <p class="contact-sub">I'm always open to interesting work, collaborations, and conversations. Drop me a line — I'd love to hear from you.</p>
+    <div class="contact-links">
+      <a class="contact-link primary" href="mailto:90deepanshu.chouhan09@gmail.com">Email me</a>
+      <a class="contact-link ghost" href="https://github.com/psDeepanshu09" target="_blank">GitHub</a>
+      <a class="contact-link ghost" href="https://www.instagram.com/ps_deepanshu09/" target="_blank">Instagram</a>
+    </div>
+  </div>
+  <footer>
+    &copy; 2026 Deepanshu Chouhan &mdash; crafted with care
+  </footer>
+</section>
+
+</body>
+</html>
