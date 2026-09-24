@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deepanshu Chouhan — Full-stack Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink:      #070B16;
+    --surface:  #0E1730;
+    --surface2: #142545;
+    --paper:    #E8EEFF;
+    --paper-dim:rgba(232,238,255,0.55);
+    --blue: #3D7FFF;
+    --skyblue:    #7FB3FF;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* ambient grain/texture via layered radial gradients */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 700px 500px at 15% 20%, rgba(61,127,255,0.09), transparent 60%),
+      radial-gradient(ellipse 600px 500px at 85% 75%, rgba(127,179,255,0.08), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  nav {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.2rem 3.5rem;
+  }
+  .nav-logo {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.3rem;
+    color: var(--paper);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+  }
+  .nav-links { display: flex; gap: 2.6rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--paper-dim);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -4px;
+    width: 0; height: 1px;
+    background: var(--blue);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--paper); }
+  .nav-links a:hover::after { width: 100%; }
+
+  main {
+    position: relative;
+    z-index: 5;
+    min-height: calc(100vh - 92px);
+    display: flex;
+    align-items: center;
+    padding: 2rem 3.5rem 4rem;
+  }
+
+  #hero { position: relative; }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 3rem;
+    max-width: 1200px;
+    width: 100%;
+    align-items: center;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 1.6rem;
+    opacity: 0;
+    animation: riseIn 0.7s cubic-bezier(0.16,1,0.3,1) forwards 0.1s;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--blue);
+  }
+
+  .headline {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(3.4rem, 6.4vw, 6rem);
+    line-height: 0.98;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.6rem;
+  }
+  .headline .line { display: block; overflow: hidden; }
+  .headline .line span.word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(110%) rotate(3deg);
+    animation: wordRise 0.85s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  .headline .line:nth-child(2) span.word {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--blue);
+  }
+  @keyframes wordRise {
+    to { opacity: 1; transform: translateY(0) rotate(0deg); }
+  }
+
+  /* magnetic letters — hover-reactive */
+  .headline .letter {
+    display: inline-block;
+    transition: transform 0.25s cubic-bezier(0.2,0.8,0.3,1.3), color 0.25s;
+    cursor: default;
+  }
+
+  .subrole {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+    color: rgba(61,127,255,0.85);
+    margin-bottom: 1.4rem;
+    opacity: 0;
+    animation: riseIn 0.7s cubic-bezier(0.16,1,0.3,1) forwards 0.55s;
+  }
+
+  .desc {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: var(--paper-dim);
+    max-width: 420px;
+    margin-bottom: 2.6rem;
+    opacity: 0;
+    animation: riseIn 0.7s cubic-bezier(0.16,1,0.3,1) forwards 0.68s;
+  }
+
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* magnetic CTA button */
+  .cta-wrap {
+    opacity: 0;
+    animation: riseIn 0.7s cubic-bezier(0.16,1,0.3,1) forwards 0.8s;
+  }
+  .cta {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 1rem 2rem;
+    background: var(--blue);
+    color: var(--ink);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    border-radius: 100px;
+    transition: transform 0.15s ease-out, background 0.3s;
+    will-change: transform;
+  }
+  .cta:hover { background: var(--skyblue); color: var(--ink); }
+  .cta-arrow { transition: transform 0.3s cubic-bezier(0.2,0.8,0.2,1); }
+  .cta:hover .cta-arrow { transform: translate(3px,-3px) rotate(0deg); }
+
+  /* RIGHT SIDE — drifting skill chips (cursor-reactive) */
+  .chip-field {
+    position: relative;
+    height: 460px;
+    opacity: 0;
+    animation: riseIn 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.5s;
+  }
+  .chip {
+    position: absolute;
+    padding: 0.55rem 1.1rem;
+    background: var(--surface2);
+    border: 1px solid rgba(232,238,255,0.1);
+    border-radius: 100px;
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+    color: var(--paper-dim);
+    white-space: nowrap;
+    transition: transform 0.35s cubic-bezier(0.2,0.8,0.2,1), border-color 0.3s, color 0.3s;
+    animation: drift 7s ease-in-out infinite;
+  }
+  .chip:hover { border-color: var(--blue); color: var(--paper); }
+  @keyframes drift {
+    0%, 100% { transform: translateY(0px); }
+    50%      { transform: translateY(-12px); }
+  }
+
+  .chip1 { top: 4%;  left: 10%; animation-delay: 0s; }
+  .chip2 { top: 2%;  left: 55%; animation-delay: 1.1s; }
+  .chip3 { top: 22%; left: 30%; animation-delay: 2.3s; }
+  .chip4 { top: 38%; left: 65%; animation-delay: 0.6s; }
+  .chip5 { top: 48%; left: 5%;  animation-delay: 1.8s; }
+  .chip6 { top: 58%; left: 38%; animation-delay: 3s; }
+  .chip7 { top: 68%; left: 68%; animation-delay: 0.3s; }
+  .chip8 { top: 80%; left: 15%; animation-delay: 2.6s; }
+  .chip9 { top: 82%; left: 48%; animation-delay: 1.4s; }
+
+  .field-label {
+    position: absolute;
+    bottom: -6px;
+    left: 5%;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(232,238,255,0.3);
+  }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 2.4rem;
+    left: 3.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(232,238,255,0.35);
+    text-decoration: none;
+    z-index: 5;
+    transition: color 0.3s;
+  }
+  .scroll-cue:hover { color: var(--paper-dim); }
+  .scroll-line {
+    width: 32px; height: 1px;
+    background: rgba(232,238,255,0.35);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    left: -100%; top: 0;
+    width: 100%; height: 100%;
+    background: var(--blue);
+    animation: scrollTrace 2.4s ease-in-out infinite;
+  }
+  @keyframes scrollTrace {
+    0%   { left: -100%; }
+    50%  { left: 100%; }
+    100% { left: 100%; }
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 1.4rem 1.6rem; }
+    main { padding: 2rem 1.6rem 3rem; min-height: auto; padding-top: 5.5rem; }
+    .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .chip-field { height: 220px; order: -1; }
+    .headline { font-size: clamp(2.6rem, 11vw, 3.6rem); }
+    .desc { max-width: 100%; }
+    .scroll-cue { display: none; }
+  }
+
+  /* ============ SCROLL REVEAL ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1.is-visible { transition-delay: 0.1s; }
+  .reveal-delay-2.is-visible { transition-delay: 0.2s; }
+  .reveal-delay-3.is-visible { transition-delay: 0.3s; }
+
+  /* ============ ABOUT ============ */
+  #about {
+    position: relative;
+    z-index: 5;
+    padding: 8rem 3.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .about-kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 2.2rem;
+  }
+  .about-kicker::before { content: ''; width: 24px; height: 1px; background: var(--blue); }
+
+  .about-manifesto {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(1.7rem, 3.4vw, 2.9rem);
+    line-height: 1.35;
+    max-width: 900px;
+    color: var(--paper);
+    margin-bottom: 3.5rem;
+  }
+  .about-manifesto em {
+    font-style: italic;
+    color: var(--blue);
+  }
+
+  .about-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    max-width: 900px;
+    margin-bottom: 4rem;
+  }
+  .about-col-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(232,238,255,0.35);
+    margin-bottom: 0.8rem;
+  }
+  .about-col-text {
+    font-size: 0.92rem;
+    line-height: 1.8;
+    color: var(--paper-dim);
+  }
+
+  /* marquee of practices — replaces the old static tag grid */
+  .marquee-wrap {
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid rgba(232,238,255,0.1);
+    border-bottom: 1px solid rgba(232,238,255,0.1);
+    padding: 1.6rem 0;
+    mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 2.5rem;
+    width: max-content;
+    animation: marqueeScroll 26s linear infinite;
+  }
+  .marquee-track span {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--paper-dim);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+  }
+  .marquee-track span::after {
+    content: '✦';
+    font-style: normal;
+    font-size: 0.9rem;
+    color: var(--blue);
+    opacity: 0.6;
+  }
+  @keyframes marqueeScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ============ WORK ============ */
+  #work {
+    position: relative;
+    z-index: 5;
+    padding: 6rem 3.5rem 8rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .work-kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 0.8rem;
+  }
+  .work-kicker::before { content: ''; width: 24px; height: 1px; background: var(--blue); }
+  .work-heading {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 3rem;
+  }
+
+  .project-card {
+    position: relative;
+    background: linear-gradient(155deg, var(--surface), var(--surface2));
+    border: 1px solid rgba(232,238,255,0.1);
+    border-radius: 24px;
+    padding: 3rem;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transition: border-color 0.4s, box-shadow 0.4s;
+    will-change: transform;
+  }
+  .project-card:hover {
+    border-color: rgba(61,127,255,0.35);
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.5);
+  }
+  .project-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(500px 300px at var(--mx,50%) var(--my,50%), rgba(61,127,255,0.1), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  .project-card:hover::after { opacity: 1; }
+
+  .project-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+  }
+  .project-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8FE3A8;
+    border: 1px solid rgba(143,227,168,0.3);
+    border-radius: 100px;
+    padding: 0.35rem 0.85rem;
+  }
+  .project-status .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #8FE3A8;
+    box-shadow: 0 0 0 0 rgba(143,227,168,0.6);
+    animation: livePulse 2.2s ease-out infinite;
+  }
+  @keyframes livePulse {
+    0%   { box-shadow: 0 0 0 0 rgba(143,227,168,0.5); }
+    70%  { box-shadow: 0 0 0 8px rgba(143,227,168,0); }
+    100% { box-shadow: 0 0 0 0 rgba(143,227,168,0); }
+  }
+  .project-arrow-badge {
+    font-size: 1rem;
+    color: var(--paper-dim);
+    transition: transform 0.3s, color 0.3s;
+  }
+  .project-card:hover .project-arrow-badge { color: var(--blue); transform: translate(3px,-3px); }
+
+  .project-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    margin-bottom: 0.4rem;
+  }
+  .project-tagline {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--blue);
+    font-size: 1rem;
+    margin-bottom: 1.4rem;
+  }
+  .project-desc {
+    font-size: 0.92rem;
+    line-height: 1.75;
+    color: var(--paper-dim);
+    max-width: 620px;
+    margin-bottom: 2rem;
+  }
+
+  .project-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem 1.5rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid rgba(232,238,255,0.1);
+    margin-bottom: 1.8rem;
+  }
+  .feature-item {
+    font-size: 0.82rem;
+    color: var(--paper-dim);
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .feature-item::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--skyblue);
+    flex-shrink: 0;
+    transform: translateY(-2px);
+  }
+
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+  .project-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: var(--paper-dim);
+    border: 1px solid rgba(232,238,255,0.15);
+    border-radius: 100px;
+    padding: 0.3rem 0.85rem;
+  }
+
+  /* ============ CONTACT ============ */
+  #contact {
+    position: relative;
+    z-index: 5;
+    padding: 8rem 3.5rem 5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .contact-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 1.8rem;
+  }
+  .contact-kicker::before { content: ''; width: 24px; height: 1px; background: var(--blue); }
+
+  .contact-headline {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(2.6rem, 6.5vw, 5rem);
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+  }
+  .contact-headline em { font-style: italic; color: var(--blue); }
+
+  .contact-sub {
+    font-size: 0.95rem;
+    color: var(--paper-dim);
+    max-width: 460px;
+    margin: 0 auto 3.2rem;
+    line-height: 1.75;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    margin-bottom: 6rem;
+  }
+  .contact-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.95rem 1.8rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    border-radius: 100px;
+    transition: transform 0.15s ease-out, background 0.3s, color 0.3s, border-color 0.3s;
+    will-change: transform;
+  }
+  .contact-link.primary {
+    background: var(--blue);
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .contact-link.primary:hover { background: var(--skyblue); }
+  .contact-link.ghost {
+    border: 1px solid rgba(232,238,255,0.2);
+    color: var(--paper-dim);
+  }
+  .contact-link.ghost:hover { border-color: var(--blue); color: var(--paper); }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: rgba(232,238,255,0.3);
+    position: relative;
+    z-index: 5;
+  }
+
+  @media (max-width: 900px) {
+    #about, #work, #contact { padding-left: 1.6rem; padding-right: 1.6rem; }
+    #about { padding-top: 5rem; padding-bottom: 5rem; }
+    .about-columns { grid-template-columns: 1fr; gap: 2rem; }
+    .project-feature-grid { grid-template-columns: 1fr 1fr; }
+    .project-card { padding: 1.8rem; }
+    #work { padding-top: 4rem; padding-bottom: 5rem; }
+    #contact { padding-top: 5rem; padding-bottom: 3rem; }
+    .contact-links { flex-direction: column; align-items: stretch; }
+    .contact-link { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#hero">D.C.</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+<main>
+  <div class="hero-grid">
+    <div class="hero-text">
+      <p class="eyebrow">Full-stack developer</p>
+      <h1 class="headline">
+        <span class="line" id="line1"></span>
+        <span class="line" id="line2"></span>
+      </h1>
+      <p class="subrole">Building things that stay alive after launch</p>
+      <p class="desc">I craft clean, thoughtful digital experiences — from backend systems to polished interfaces — with an eye for detail and a love for elegant code.</p>
+      <div class="cta-wrap">
+        <a class="cta" id="ctaBtn" href="#work">
+          See what I've built
+          <span class="cta-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="chip-field" id="chipField">
+      <div class="chip chip1">Scalable</div>
+      <div class="chip chip2">Intuitive</div>
+      <div class="chip chip3">Performant</div>
+      <div class="chip chip4">Reliable</div>
+      <div class="chip chip5">Elegant</div>
+      <div class="chip chip6">Secure</div>
+      <div class="chip chip7">Considered</div>
+      <div class="chip chip8">Fast</div>
+      <div class="chip chip9">Accessible</div>
+      <span class="field-label">— what I build toward</span>
+    </div>
+  </div>
+</main>
+
+<a class="scroll-cue" href="#about">
+  <span class="scroll-line"></span>
+  Scroll
+</a>
+</section>
+
+<section id="about">
+  <p class="about-kicker reveal">About</p>
+  <p class="about-manifesto reveal reveal-delay-1">I don't think of code as just logic — it's the difference between a product people <em>tolerate</em> and one they actually enjoy using. That gap is where I spend most of my attention.</p>
+
+  <div class="about-columns">
+    <div class="reveal reveal-delay-1">
+      <p class="about-col-label">On the backend</p>
+      <p class="about-col-text">I build systems that stay predictable under real usage — clean data models, sensible APIs, and logic that's easy to reason about six months later, not just on the day it ships.</p>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <p class="about-col-label">On the interface</p>
+      <p class="about-col-text">I care about the small stuff — the timing of a transition, the wording of a button, the moment something loads a beat too slow. Those details are the difference people feel, even if they can't name it.</p>
+    </div>
+  </div>
+
+  <div class="marquee-wrap reveal reveal-delay-2">
+    <div class="marquee-track">
+      <span>Node.js</span><span>Express</span><span>MongoDB</span><span>React</span><span>TypeScript</span><span>Razorpay</span><span>REST APIs</span><span>System design</span>
+      <span>Node.js</span><span>Express</span><span>MongoDB</span><span>React</span><span>TypeScript</span><span>Razorpay</span><span>REST APIs</span><span>System design</span>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <p class="work-kicker reveal">Selected work</p>
+  <h2 class="work-heading reveal reveal-delay-1">What I've been building</h2>
+
+  <a class="project-card reveal reveal-delay-2" id="projectCard" href="https://yoruturf.onrender.com/" target="_blank" rel="noopener">
+    <div class="project-top">
+      <span class="project-status"><span class="dot"></span>Live</span>
+      <span class="project-arrow-badge">↗</span>
+    </div>
+    <h3 class="project-title">Yoru Turf</h3>
+    <p class="project-tagline">Premium cricket arena booking platform</p>
+    <p class="project-desc">A full-stack cricket slot booking platform built mobile-first and deployed on Render. Handles a complete booking flow with live slot availability, overlap detection, persistent storage, and a password-protected admin dashboard for managing bookings and cancellations.</p>
+
+    <div class="project-feature-grid">
+      <div class="feature-item">Mobile-first, multi-page architecture</div>
+      <div class="feature-item">Live slots, auto-refreshing every 30s</div>
+      <div class="feature-item">Full data validation & error handling</div>
+      <div class="feature-item">Password-protected admin panel</div>
+      <div class="feature-item">Persistent data storage</div>
+      <div class="feature-item">Production deployment via Render</div>
+    </div>
+
+    <div class="project-tags">
+      <span class="project-tag">Node.js</span>
+      <span class="project-tag">Express</span>
+      <span class="project-tag">Vanilla JS</span>
+      <span class="project-tag">HTML/CSS</span>
+      <span class="project-tag">Render</span>
+    </div>
+  </a>
+</section>
+
+<section id="contact">
+  <p class="contact-kicker reveal">Let's talk</p>
+  <h2 class="contact-headline reveal reveal-delay-1">Got something<br>worth <em>building?</em></h2>
+  <p class="contact-sub reveal reveal-delay-2">I'm always open to interesting problems, collaborations, and the occasional late-night idea that turns into a real project.</p>
+  <div class="contact-links reveal reveal-delay-2">
+    <a class="contact-link primary magnetic" href="mailto:90deepanshu.chouhan09@gmail.com">Email me</a>
+    <a class="contact-link ghost magnetic" href="https://github.com/psDeepanshu09" target="_blank">GitHub</a>
+    <a class="contact-link ghost magnetic" href="https://www.instagram.com/ps_deepanshu09/" target="_blank">Instagram</a>
+  </div>
+</section>
+
+<footer>&copy; 2026 Deepanshu Chouhan — crafted with care</footer>
+
+<script>
+  // Split headline into words > letters for staggered rise + magnetic hover
+  function buildLine(el, text, wordDelayStart) {
+    const words = text.split(' ');
+    words.forEach((word, wi) => {
+      const wordSpan = document.createElement('span');
+      wordSpan.className = 'word';
+      wordSpan.style.animationDelay = (wordDelayStart + wi * 0.09) + 's';
+      wordSpan.style.marginRight = '0.28em';
+      [...word].forEach(ch => {
+        const letterSpan = document.createElement('span');
+        letterSpan.className = 'letter';
+        letterSpan.textContent = ch;
+        wordSpan.appendChild(letterSpan);
+      });
+      el.appendChild(wordSpan);
+    });
+  }
+  buildLine(document.getElementById('line1'), 'Deepanshu', 0.15);
+  buildLine(document.getElementById('line2'), 'Chouhan', 0.32);
+
+  // Magnetic letter hover
+  const letters = document.querySelectorAll('.letter');
+  document.addEventListener('mousemove', (e) => {
+    letters.forEach(letter => {
+      const rect = letter.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = e.clientX - cx;
+      const dy = e.clientY - cy;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      const radius = 70;
+      if (dist < radius) {
+        const strength = (1 - dist / radius);
+        const ty = -6 * strength;
+        letter.style.transform = `translateY(${ty}px)`;
+        letter.style.color = strength > 0.5 ? 'var(--blue)' : '';
+      } else {
+        letter.style.transform = '';
+        letter.style.color = '';
+      }
+    });
+  });
+
+  // Magnetic CTA button
+  const cta = document.getElementById('ctaBtn');
+  cta.addEventListener('mousemove', (e) => {
+    const rect = cta.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    cta.style.transform = `translate(${x * 0.25}px, ${y * 0.4}px)`;
+  });
+  cta.addEventListener('mouseleave', () => {
+    cta.style.transform = 'translate(0,0)';
+  });
+
+  // Chips gently repel from cursor
+  const chipField = document.getElementById('chipField');
+  const chips = document.querySelectorAll('.chip');
+  chipField.addEventListener('mousemove', (e) => {
+    const fieldRect = chipField.getBoundingClientRect();
+    const mx = e.clientX - fieldRect.left;
+    const my = e.clientY - fieldRect.top;
+    chips.forEach(chip => {
+      const cx = chip.offsetLeft + chip.offsetWidth / 2;
+      const cy = chip.offsetTop + chip.offsetHeight / 2;
+      const dx = cx - mx;
+      const dy = cy - my;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      const radius = 110;
+      if (dist < radius) {
+        const strength = (1 - dist / radius) * 18;
+        const angle = Math.atan2(dy, dx);
+        chip.style.transform = `translate(${Math.cos(angle)*strength}px, ${Math.sin(angle)*strength - 12}px)`;
+      } else {
+        chip.style.transform = '';
+      }
+    });
+  });
+  chipField.addEventListener('mouseleave', () => {
+    chips.forEach(chip => chip.style.transform = '');
+  });
+
+  // Scroll-triggered reveals
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // Project card — subtle 3D tilt + cursor-follow glow
+  const projectCard = document.getElementById('projectCard');
+  projectCard.addEventListener('mousemove', (e) => {
+    const rect = projectCard.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    const rotateX = (0.5 - py) * 6;
+    const rotateY = (px - 0.5) * 6;
+    projectCard.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+    projectCard.style.setProperty('--mx', `${px * 100}%`);
+    projectCard.style.setProperty('--my', `${py * 100}%`);
+  });
+  projectCard.addEventListener('mouseleave', () => {
+    projectCard.style.transform = '';
+  });
+
+  document.querySelectorAll('.magnetic').forEach(link => {
+    link.addEventListener('mousemove', (e) => {
+      const rect = link.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      link.style.transform = `translate(${x * 0.2}px, ${y * 0.3}px)`;
+    });
+    link.addEventListener('mouseleave', () => {
+      link.style.transform = 'translate(0,0)';
+    });
+  });
+</script>
+
+</body>
+</html>
