@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0B1220">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Booking status · Salon</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;600&display=swap">
+<style>
+:root{--paper:#0B1220;--ink:#F7F9FC;--body:#B8C5D5;--muted:#8798AD;--soft:#111C2D;--card:#1E3045;--line:#304968;--accent:#91A7C0;--accent-h:#B0C3D8;color-scheme:dark;box-sizing:border-box}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--body);font:400 1rem/1.6 "Work Sans",system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--paper);z-index:30}
+h1,h2,.logo,.ref{font-family:"Bebas Neue",Impact,sans-serif;font-weight:400;line-height:1;margin:0;color:var(--ink)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.wrap{max-width:40rem;margin:0 auto;padding:0 1.25rem}
+header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--paper);border-bottom:1px solid var(--line);z-index:20}
+header .wrap{max-width:76rem;display:flex;align-items:center;justify-content:space-between;height:4rem}
+.logo{font-size:2rem;text-decoration:none}
+.btn{display:inline-block;border:1px solid var(--accent);border-radius:999px;padding:.6rem 1.5rem;text-decoration:none;color:var(--ink);background:transparent;font:inherit;cursor:pointer}
+.btn:hover{background:var(--accent-h);border-color:var(--accent-h);color:#0B1220}
+h1{font-size:clamp(2.8rem,8vw,4.5rem);margin:2.5rem 0 1.25rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:1.25rem;padding:1.75rem;text-align:center}
+.badge{display:inline-block;border:1px solid currentColor;border-radius:999px;padding:.2rem 1rem;font-size:.9rem;font-weight:600}
+.pending{color:#F5C26B}.confirmed{color:#4ade80}.declined,.cancelled,.expired{color:#ff7b80}
+.ref{font-size:3.4rem;letter-spacing:.06em;margin:.6rem 0}
+.r{display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px dotted var(--line);text-align:left}
+.r b{color:var(--ink);text-align:right}
+.msg{margin:1rem 0 1.25rem}
+.muted{color:var(--muted)}
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="logo" href="index.html">Salon</a><a class="btn" href="index.html">Back to site</a></div></header>
+<div class="wrap">
+ <h1>Booking status</h1>
+ <div class="card" id="card" aria-live="polite"><p class="muted">Checking…</p></div>
+ <p style="text-align:center;margin:1.5rem 0 4rem"><a class="btn" href="book.html">Book another slot</a></p>
+</div>
+<script>
+var T={
+ pending:['Pending','Your request is waiting for the salon. It is not confirmed until the salon accepts it.'],
+ confirmed:['Confirmed','Your appointment is confirmed. See you then!'],
+ declined:['Declined','The salon couldn’t take this time. Please request another slot.'],
+ cancelled:['Cancelled','This appointment was cancelled. You’re welcome to book another time.'],
+ expired:['Expired','This request wasn’t answered in time. Please request a new slot.']
+};
+function esc(t){return String(t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+var p=new URLSearchParams(location.hash.slice(1)),ref=p.get('ref'),tok=p.get('t'),timer=null;
+function show(html){document.getElementById('card').innerHTML=html}
+function money(n){return'₹'+Number(n).toLocaleString('en-IN')}
+function load(){
+  fetch('/api/status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:ref,t:tok})})
+  .then(function(r){return r.json().then(function(d){return{ok:r.ok,status:r.status,d:d}})})
+  .then(function(r){
+    if(r.status===404){clearInterval(timer);return show('<p>We couldn’t find a booking for this link. Please check that you copied the whole link.</p>')}
+    if(!r.ok)throw 0;
+    var b=r.d,t=T[b.status]||[b.status,''],f={timeZone:'Asia/Kolkata'};
+    var when=new Date(b.appointment_start),x=function(a,v){return'<div class="r"><span>'+a+'</span><b>'+v+'</b></div>'};
+    show('<span class="badge '+esc(b.status)+'">'+esc(t[0])+'</span><div class="ref">'+esc(b.booking_reference)+'</div><p class="msg">'+t[1]+'</p>'+
+      x('Service',esc(b.service_name))+x('Price',money(b.price))+x('Duration',b.duration_minutes+' min')+
+      x('Date',when.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'long',year:'numeric',timeZone:f.timeZone}))+
+      x('Time',when.toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit',hour12:true,timeZone:f.timeZone}).replace(/\u202f/g,' ')));
+    if(b.status!=='pending')clearInterval(timer);
+  }).catch(function(){show('<p>We couldn’t check the status right now. Please try again in a moment.</p>')});
+}
+if(!ref||!tok){show('<p>This page needs the status link you were given after booking.</p>')}
+else{load();timer=setInterval(load,30000)}
+</script>
+</body>
+</html>
